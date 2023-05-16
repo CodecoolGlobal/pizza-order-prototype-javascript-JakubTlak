@@ -1,0 +1,53 @@
+{
+    "pizzas":[
+        {
+            "id":1,
+            "name":"Margherita",
+            "ingedients":["mozarella","tomato sauce"],
+            "price":43.99,
+            "allergens":[1,2,5,3]
+        },
+        {
+            "id":2,
+            "name":"Pepperoni",
+            "ingedients":["pepperoni","mozarella","tomato sauce"],
+            "price":53.99,
+            "allergens":[1,5,4,3]
+        },
+        {
+            "id":3,
+            "name":"Capricciosa",
+            "ingedients":["ham","mushrooms","tomatoes","olives","mozarella","tomato sauce"],
+            "price":59.99,
+            "allergens":[2,4,5]
+        },
+        {
+            "id":4,
+            "name":"Texas",
+            "ingedients":["grilled chicken","corn","red onion","mozarella","BBQ sauce"],
+            "price":59.99,
+            "allergens":[1,2,4,5]
+        },
+        {
+            "id":5,
+            "name":"Supreme",
+            "ingedients":["beef","pepperoni","onion","green pepper","mozarella","tomato sauce"],
+            "price":59.99,
+            "allergens":[1,4,5]
+        },
+        {
+            "id":6,
+            "name":"Super Cheese",
+            "ingedients":["mozarella","cheddar","corregio","garlic sauce"],
+            "price":59.99,
+            "allergens":[1,2,4,5,3]
+        },
+        {
+            "id":7,
+            "name":"Vege",
+            "ingedients":["tomato sauce","mozarella","red onion","spinach","bell pepper"],
+            "price":65.99,
+            "allergens":[2,4,5]
+        }
+    ]
+}

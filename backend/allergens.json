@@ -1,0 +1,24 @@
+{
+    "allergens": [
+        {
+            "id": 1,
+            "name": "gluten"
+        },
+        {
+            "id": 2,
+            "name": "dairy"
+        },
+        {
+            "id": 3,
+            "name": "egg"
+        },
+        {
+            "id": 4,
+            "name": "soy"
+        },
+        {
+            "id": 5,
+            "name": "tomatoes"
+        }
+    ]
+}
