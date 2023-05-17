@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
+const path = require("path");
 
 function getDataObject(pathName) {
-    return JSON.parse(fs.readFile(`${__dirname}${pathName}`))
+    return JSON.parse(fs.readFileSync(`${__dirname}/${pathName}`))
 }
 
 router.route("/pizza")

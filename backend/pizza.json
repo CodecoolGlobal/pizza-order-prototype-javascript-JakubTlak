@@ -5,49 +5,56 @@
             "name":"Margherita",
             "ingedients":["mozarella","tomato sauce"],
             "price":43.99,
-            "allergens":[1,2,5,3]
+            "allergens":[1,2,5,3],
+            "img":"https://amrestcdn.azureedge.net/ph-web-ordering/Pizza_Hut_PL/NEW_WWW/314x314/PIZZA/PH_314x314_margherita-min_.jpg"
         },
         {
             "id":2,
             "name":"Pepperoni",
             "ingedients":["pepperoni","mozarella","tomato sauce"],
             "price":53.99,
-            "allergens":[1,5,4,3]
+            "allergens":[1,5,4,3],
+            "img":"https://sawepecomcdn.blob.core.windows.net/ph-web-ordering/Pizza_Hut_PL/promotion/W1-2023-nowe-smaki/NOWE%20SMAKI/PL/SWEETPEPPERONI_500x500.jpg"
         },
         {
             "id":3,
             "name":"Capricciosa",
             "ingedients":["ham","mushrooms","tomatoes","olives","mozarella","tomato sauce"],
             "price":59.99,
-            "allergens":[2,4,5]
+            "allergens":[2,4,5],
+            "img":"https://amrestcdn.azureedge.net/ph-web-ordering/Pizza_Hut_PL/NEW_WWW/314x314/PIZZA/PH_314x314_hot_pepperoni-min_.jpg"
         },
         {
             "id":4,
             "name":"Texas",
             "ingedients":["grilled chicken","corn","red onion","mozarella","BBQ sauce"],
             "price":59.99,
-            "allergens":[1,2,4,5]
+            "allergens":[1,2,4,5],
+            "img":"https://amrestcdn.azureedge.net/ph-web-ordering/Pizza_Hut_PL/NEW_WWW/314x314/PIZZA/PH_314x314_teksas-min_.jpg"
         },
         {
             "id":5,
             "name":"Supreme",
             "ingedients":["beef","pepperoni","onion","green pepper","mozarella","tomato sauce"],
             "price":59.99,
-            "allergens":[1,4,5]
+            "allergens":[1,4,5],
+            "img":"https://amrestcdn.azureedge.net/ph-web-ordering/Pizza_Hut_PL/NEW_WWW/314x314/PIZZA/PH_314x314_super_supreme-min_.jpg"
         },
         {
             "id":6,
             "name":"Super Cheese",
             "ingedients":["mozarella","cheddar","corregio","garlic sauce"],
             "price":59.99,
-            "allergens":[1,2,4,5,3]
+            "allergens":[1,2,4,5,3],
+            "img":"https://amrestcdn.azureedge.net/ph-web-ordering/Pizza_Hut_PL/NEW_WWW/nowe-pizze/serowa_500x500.jpg"
         },
         {
             "id":7,
             "name":"Vege",
             "ingedients":["tomato sauce","mozarella","red onion","spinach","bell pepper"],
             "price":65.99,
-            "allergens":[2,4,5]
+            "allergens":[2,4,5],
+            "img":"https://sawepecomcdn.blob.core.windows.net/ph-web-ordering/Pizza_Hut_PL/NEW_WWW/VEGEMANIA_NOWA_500x500.jpg"
         }
     ]
 }
