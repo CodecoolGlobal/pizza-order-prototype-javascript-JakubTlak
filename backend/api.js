@@ -19,4 +19,66 @@ router.route("/allergen")
         response.send(data).status(200)
     })
 
+// Sample initial order
+let orders = [
+    {
+        id: 1,
+        pizzas: [
+            {id: 1, amount: 2}
+        ],
+        date: {
+            year: 2022,
+            month: 6,
+            day: 7,
+            hour: 18,
+            minute: 47
+        },
+        customer: {
+            name: "Barbara",
+            email: "babad@example.com",
+            address: {
+                city: "Varovia",
+                street: "Marszalka"
+            }
+        }
+    }
+];
+
+// GET /api/order - Retrieve the list of orders
+router.route("/order")
+    .get((request, response) => {
+        response.json(orders);
+    })
+
+// POST /api/order - Add a new order to the list
+router.route("/order")
+    .post((req, res) => {
+        const newOrder = req.body;
+        if (!isValidOrder(newOrder)) {
+            return res.status(400).json({ error: 'Invalid order object' });
+        }
+        const orderId = orders.length + 1;
+        newOrder.id = orderId;
+        orders.push(newOrder);
+        res.status(201).json(orders);
+    });
+
+// Function to validate the order object
+function isValidOrder(order) {
+    if (
+        !order ||
+        typeof order !== 'object' ||
+        !Array.isArray(order.pizzas) ||
+        !order.date ||
+        typeof order.date !== 'object' ||
+        typeof order.date.year !== 'number' ||
+        typeof order.date.month !== 'number' ||
+        typeof order.date.day !== 'number' ||
+        typeof order.date.hour !== 'number' ||
+        typeof order.date.minute !== 'number'
+    ) {
+        return false;
+    }
+    return true;
+}
 module.exports = router;

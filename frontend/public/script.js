@@ -116,3 +116,56 @@ async function load() {
 }
 
 window.addEventListener("load", load);
+
+function getAlOrders() {
+
+// GET request to retrieve the list of orders
+    fetch('http://localhost:3000/api/order')
+        .then(response => response.json())
+        .then(orders => {
+            console.log("CLIENT - GET ORDERS: ", orders);
+        })
+        .catch(error => console.error(error));
+}
+
+getAlOrders();
+
+function sendNewOrder(){
+    const newOrder = {
+        id: 2,
+        pizzas: [
+            {id: 1, amount: 2}
+        ],
+        date: {
+            year: 2022,
+            month: 6,
+            day: 7,
+            hour: 18,
+            minute: 47
+        },
+        customer: {
+            name: "John Doe",
+            email: "jd@example.com",
+            address: {
+                city: "Palermo",
+                street: "Via Appia 6"
+            }
+        }
+    };
+
+    fetch('http://localhost:3000/api/order', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newOrder)
+    })
+        .then(response => response.json())
+        .then(updatedOrders => {
+            // Use the updated list of orders in your frontend
+            console.log("CLIENT - ORDERS UPDATED after inputing new order: ",updatedOrders);
+        })
+        .catch(error => console.error(error));
+}
+
+sendNewOrder();
