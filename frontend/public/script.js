@@ -1,17 +1,32 @@
-let order = {
+
+const order = {
     id: 0,
     pizzas: [],
-    date: {},
-    customer: {name:"xd",},
+    date: {
+        year: "",
+        month: "",
+        day: "",
+        hour: "",
+        minute: "",
+    },
+    customer: {
+        name: "",
+        email: "",
+        address: {
+            city: "",
+            street: ""
+        }
+    },
 }
-let customPizzaIngredients=[];
-let customPizzaObject={
-    id:8,
-    name:"Custom pizza",
-    ingredients:customPizzaIngredients,
-    price:64.99,
-    img:"https://amrestcdn.azureedge.net/ph-web-ordering/Pizza_Hut_PL/NEW_WWW/314x314/PIZZA/PH_314x314_margherita-min_.jpg"
+let customPizzaIngredients = [];
+let customPizzaObject = {
+    id: 8,
+    name: "Custom pizza",
+    ingredients: customPizzaIngredients,
+    price: 64.99,
+    img: "https://amrestcdn.azureedge.net/ph-web-ordering/Pizza_Hut_PL/NEW_WWW/314x314/PIZZA/PH_314x314_margherita-min_.jpg"
 }
+
 
 
 async function fetchingData(url) {
@@ -34,7 +49,7 @@ function returnTemplate(pizza) {
     <div class="price">
     <p>${pizza.price}zł</p>
     </div>
-    <button class="add-button" id="${pizza.id}">
+    <input type='button' class="add-button" id="${pizza.id}">
     ADD
     </button>
     </div>
@@ -91,8 +106,8 @@ async function displayAllergents() {
     return text;
 }
 
-function updateCustomPizzaObj(){
-    customPizzaObject.ingredients=customPizzaIngredients;
+function updateCustomPizzaObj() {
+    customPizzaObject.ingredients = customPizzaIngredients;
 }
 
 function addCustomPizza() {
@@ -151,7 +166,7 @@ async function load() {
     }).catch(error => {
         console.error(error);
     })
-    
+
     displayAllergents().then(response => {
         allergentsForm.insertAdjacentHTML("beforeend", response);
     }).catch(error => {
@@ -180,12 +195,20 @@ async function load() {
     })
     const koszykElement = document.getElementById("koszyk");
 
-    koszykElement.addEventListener("click", function (event) {
-        event.preventDefault()
-        window.location.href = "http://127.0.0.1:3000/order"
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('add-button')) {
+            e.preventDefault();
+            let pizzaID = e.target.parentElement.id.split(':')[1];
+            order.pizzas.push({ id: pizzaID, amount: 1 })
+        }
     })
 
-    if (window.location.href === "http://127.0.0.1:3000/order") {
+    koszykElement.addEventListener("click", function (event) {
+        event.preventDefault()
+    //     window.location.href = "http://127.0.0.1:3000/order"
+    // })
+
+    // if (window.location.href === "http://127.0.0.1:3000/order") {
         rootElement.replaceChildren();
         mainElement.replaceChildren()
         mainElement.insertAdjacentHTML("beforeend", `<button id="home">HOME</button>`)
@@ -203,28 +226,29 @@ async function load() {
 
         orderForm.addEventListener("input", function (event) {
             event.preventDefault()
-                if (event.target.id === "order-name") {
-                    customerName = event.target.value;
-                    console.log(customerName);
-                }
-                if (event.target.id === "order-second-name") {
-                    customerSecondName = event.target.value;
-                    console.log(customerSecondName);
-                }
-                if (event.target.id === "email") {
-                    customerEmail = event.target.value;
-                    console.log(email);
-                }
-                if (event.target.id === "city") {
-                    customerCity = event.target.value;
-                    console.log(customerCity);
-                }
-                if (event.target.id === "street") {
-                    customerStreet = event.target.value;
-                    console.log(customerStreet);
-                }
+            if (event.target.id === "order-name") {
+                customerName = event.target.value;
+                console.log(customerName);
+                console.log(order);
+            }
+            if (event.target.id === "order-second-name") {
+                customerSecondName = event.target.value;
+                console.log(customerSecondName);
+            }
+            if (event.target.id === "email") {
+                customerEmail = event.target.value;
+                console.log(email);
+            }
+            if (event.target.id === "city") {
+                customerCity = event.target.value;
+                console.log(customerCity);
+            }
+            if (event.target.id === "street") {
+                customerStreet = event.target.value;
+                console.log(customerStreet);
+            }
         })
-        orderButton.addEventListener("click", function (event) {
+        orderButton.addEventListener("click", async function (event) {
             event.preventDefault();
 
             // -------------- validation Order form error messages display --- START --------------
@@ -262,49 +286,57 @@ async function load() {
             if (errorMessages.length > 0) {
                 let errorContainer = document.getElementById('error-container');
                 errorContainer.innerHTML = '';
-                errorMessages.forEach(function(errorMessage) {
+                errorMessages.forEach(function (errorMessage) {
                     let errorElement = document.createElement('p');
                     errorElement.textContent = errorMessage;
                     errorContainer.appendChild(errorElement);
                 });
                 return;
             }
-            else{
+            else {
                 let errorContainer = document.getElementById('error-container');
                 errorContainer.innerHTML = '';
             }
-// -------------- validation Order form error messages display --- START --------------
-
-            order.id++;
-            order.customer.name = customerName + " " +  customerSecondName
+            // -------------- validation Order form error messages display --- START --------------
+            let currentID=await fetchLatestID();  
+            order.id=parseInt(currentID.id)+1;
+            order.customer.name = customerName + " " + customerSecondName
             order.customer.email = customerEmail;
-            order.customer.city = customerCity;
-            order.customer.street = customerStreet;
+            order.customer.address.city = customerCity;
+            order.customer.address.street = customerStreet;
             let date = new Date()
             order.date.year = date.getFullYear()
             order.date.month = date.getMonth() + 1
             order.date.day = date.getDate()
             order.date.hour = date.getHours()
-            order.date.minutes = date.getMinutes()
+            order.date.minute = date.getMinutes()
 
             fetch("http://127.0.0.1:3000/order", {
                 method: 'POST',
-                headers:{'Content-type': 'application/json'},
+                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(order)
             })
-            .then(response => response.text())
-            .then((result)=>{
-                console.log(result);
-            })
-            .catch(error=>{
-                console.error(error);
-            })
+                .then(response => response.text())
+                .then((result) => {
+                    console.log(result);
+                })
+                .catch(error => {
+                    console.error(error);
+                })
         })
 
-        homeButton.addEventListener("click", function(event){
+        homeButton.addEventListener("click", function (event) {
             event.preventDefault()
             window.location.href = "http://127.0.0.1:3000/"
         })
-    }
+    })
+}
+
+async function fetchLatestID(){
+    // let currentID = await  fetch("http://127.0.0.1:3000/order/latestID");
+    //         currentID = await currentID.json();
+    const response = await fetch('http://127.0.0.1:3000/order/latestID');
+    const jsonData = await response.json();
+    return jsonData;
 }
 window.addEventListener("load", load);

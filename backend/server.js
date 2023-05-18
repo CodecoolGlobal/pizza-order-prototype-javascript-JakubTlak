@@ -22,7 +22,10 @@ app.get("/order", (req,res)=>{
 
 app.post("/order", (req,res)=>{
 	let order = req.body;
-	fs.writeFile(`${__dirname}/../backend/order.json`, JSON.stringify(order),(error)=>{
+	const orderArr=JSON.parse(fs.readFileSync(`${__dirname}/../backend/order.json`));
+	console.log(orderArr);
+	orderArr.push(order);
+	fs.writeFile(`${__dirname}/../backend/order.json`, JSON.stringify(orderArr),(error)=>{
 		if(error){
 			console.error(error)
 			res.status(500).send("i cuj")
@@ -30,6 +33,13 @@ app.post("/order", (req,res)=>{
 			res.status(200).send("git")
 		}
 	})
+})
+
+app.get("/order/latestID",(req,res)=>{
+	let orderArr=JSON.parse(fs.readFileSync(`${__dirname}/../backend/order.json`));
+	let latestID = orderArr[orderArr.length-1].id;
+	let IDobj = {id:latestID};
+	res.send(JSON.stringify(IDobj));
 })
 
 
