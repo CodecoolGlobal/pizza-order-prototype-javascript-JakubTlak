@@ -107,7 +107,7 @@ async function load() {
 
 
 
-
+    const mainElement = document.getElementById("main")
     const rootElement = document.getElementById("root")
     const pizzasForm = document.getElementById("pizzas")
     const allergentsForm = document.getElementById('allergents')
@@ -161,6 +161,9 @@ async function load() {
 
     if (window.location.href === "http://127.0.0.1:3000/order") {
         rootElement.replaceChildren();
+        mainElement.replaceChildren()
+
+        mainElement.insertAdjacentHTML("beforeend", `<button id="home">HOME</button>`)
         rootElement.insertAdjacentHTML("beforeend", displayOrder())
 
 
@@ -175,6 +178,7 @@ async function load() {
         const orderForm = document.querySelector("form");
         const inputs = document.querySelectorAll("input");
         const orderButton = document.getElementById("save-order")
+        const homeButton = document.getElementById("home");
 
         orderForm.addEventListener("input", function (event) {
             event.preventDefault()
@@ -187,12 +191,12 @@ async function load() {
                     console.log(customerSecondName);
                 }
                 if (event.target.id === "email") {
-                    email = event.target.value;
+                    customerEmail = event.target.value;
                     console.log(email);
                 }
                 if (event.target.id === "city") {
-                    customerEmail = event.target.value;
-                    console.log(customerEmail);
+                    customerCity = event.target.value;
+                    console.log(customerCity);
                 }
                 if (event.target.id === "street") {
                     customerStreet = event.target.value;
@@ -201,7 +205,7 @@ async function load() {
         })
         orderButton.addEventListener("click", function (event) {
             event.preventDefault()
-            order.customer.name = customerName 
+            order.customer.name = customerName + " " +  customerSecondName
             order.customer.email = customerEmail;
             order.customer.city = customerCity;
             order.customer.street = customerStreet;
@@ -230,6 +234,12 @@ async function load() {
             .catch(error=>{
                 console.error(error);
             })
+        })
+
+
+        homeButton.addEventListener("click", function(event){
+            event.preventDefault()
+            window.location.href = "http://127.0.0.1:3000/"
         })
     }
 }
