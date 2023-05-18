@@ -19,34 +19,11 @@ router.route("/allergen")
         response.send(data).status(200)
     })
 
-// Sample initial order
-let orders = [
-    {
-        id: 1,
-        pizzas: [
-            {id: 1, amount: 2}
-        ],
-        date: {
-            year: 2022,
-            month: 6,
-            day: 7,
-            hour: 18,
-            minute: 47
-        },
-        customer: {
-            name: "Barbara",
-            email: "babad@example.com",
-            address: {
-                city: "Varovia",
-                street: "Marszalka"
-            }
-        }
-    }
-];
 
 // GET /api/order - Retrieve the list of orders
 router.route("/order")
     .get((request, response) => {
+        const orders = getDataObject("order.json");
         response.json(orders);
     })
 

@@ -1,4 +1,5 @@
 
+
 const order = {
     id: 0,
     pizzas: [],
@@ -32,7 +33,7 @@ let customPizzaObject = {
 async function fetchingData(url) {
     const response = await fetch(url);
     const result = await response.json();
-    console.log(result)
+    // console.log(result)
     return result;
 }
 
@@ -49,9 +50,11 @@ function returnTemplate(pizza) {
     <div class="price">
     <p>${pizza.price}zł</p>
     </div>
-    <input type='button' class="add-button" id="${pizza.id}">
-    ADD
-    </button>
+    <div class='allergens'>
+        ${pizza.allergens}
+        </div>
+    <input type='button' class="add-button" id="${pizza.id}" value="ADD">
+    <input type='number' class='amount-add' id="amount${pizza.id}" placeholder='amount'>
     </div>
     `
 }
@@ -63,16 +66,19 @@ function displayOrder() {
     <input id="email" placeholder="email">
     <input id="city" placeholder="city">
     <input id="street" placeholder="street">
-    <button id="save-order">ORDER</button>
+    <input type='button' value='ORDER' id="save-order">
     </form>
     <div id="error-container" style="color:red;font-weight: bold"></div>
     `
 }
 
+
+
 async function displayPizzas() {
     const pizzaData = await fetchingData("http://localhost:3000/api/pizza");
+    
     let text = "";
-
+    // console.log(pizzaData.pizzas);
     pizzaData.pizzas.forEach(pizza => {
         text += `<div class="pizza" id="${'pizza:' + pizza.id}">
         <div class="pizza-name" >
@@ -81,23 +87,51 @@ async function displayPizzas() {
         <div class="allergens" id="${pizza.allergens}"></div>
         <img src=${pizza.img}>
         <div class="cena-add-button">
-        <div class="ingedients">
-        <p>${pizza.ingedients}</p>
+            <div class="ingedients">
+                <p>${pizza.ingedients}</p>
+            </div>
+            
         </div>
-        <div class="price">
-        <p>${pizza.price}zł</p>
+            <div class="price">
+                    <p>${pizza.price}zł</p>
+                </div>
+        <div class='allergens'>
+        ${pizza.allergens}
         </div>
-        <button class="add-button" id="${pizza.id}">
-        ADD
-        </button>
-        </div>
+            <input type='button' class="add-button" id="${pizza.id}" value="ADD">
+            <input type='number' class='amount-add' id="amount${pizza.id}" placeholder='amount'>
+        
         </div>
         `
     });
     return text;
 }
 
-async function displayAllergents() {
+async function swapAllergensNames(){
+    const allergensArr= await fetchDatas("http://localhost:3000/api/allergen");
+    // console.log(allergensArr.allergens);
+    let allergensIDArr=document.getElementsByClassName('allergens');
+    let text='';
+    Array.from(allergensIDArr).forEach((allergen,index)=>{
+        if(index%2!=0){
+        console.log(allergen);
+        let allergArr=allergen.innerText.split(',');
+        // console.log(allergen.innerText);
+        allergArr.forEach(id=>{
+            let name = allergensArr.allergens.find(allerg=>allerg.id==id);
+            name=name.name;
+            
+            text+=`${name}, `;
+        })
+        allergen.innerText=text;
+        text='';
+    }
+    })
+}
+
+
+
+async function displayAllergens() {
     const allergenData = await fetchingData("http://localhost:3000/api/allergen");
     let text = "";
 
@@ -147,11 +181,16 @@ function addCustomPizza() {
         <div class='price'>
         <p>64.99zł</p>
         </div>
-        <button class="add-button" id="8">
-        ADD
-        </button>
+        <input type='button' class="add-button" id="8" value='ADD'>
+        <input type='number' class='amount-add' id="amount8" placeholder='amount'>
     </div>`
     document.getElementById('pizzas').insertAdjacentHTML('beforeend', template);
+}
+
+
+
+function checkIfAnyPizzaAdded(){
+    return order.pizzas.length>0;
 }
 
 async function load() {
@@ -165,11 +204,12 @@ async function load() {
     displayPizzas().then(response => {
         pizzasForm.insertAdjacentHTML("beforeend", response);
         addCustomPizza();
+        swapAllergensNames();
     }).catch(error => {
         console.error(error);
     })
 
-    displayAllergents().then(response => {
+    displayAllergens().then(response => {
         allergentsForm.insertAdjacentHTML("beforeend", response);
     }).catch(error => {
         console.error(error);
@@ -187,30 +227,63 @@ async function load() {
                 let id = box.id.split(":")[1];
                 if (box.checked == true) {
                     pizzas.pizzas = pizzas.pizzas.filter(pizza => !pizza.allergens.includes(parseInt(id)));
+                    
                 }
             })
             document.getElementById('pizzas').replaceChildren();
             pizzas.pizzas.forEach(pizza => {
                 document.getElementById('pizzas').insertAdjacentHTML('beforeend', returnTemplate(pizza));
+                swapAllergensNames();
             })
+            addCustomPizza();
         }
     })
     const koszykElement = document.getElementById("koszyk");
+    koszykElement.disabled=true;
 
     window.addEventListener('click', (e) => {
-        if (e.target.classList.contains('add-button')) {
+        if (e.target.classList.contains('add-button') && e.target.value=='ADD') {
             e.preventDefault();
             let pizzaID = e.target.parentElement.id.split(':')[1];
-            order.pizzas.push({ id: pizzaID, amount: 1 })
+            if(document.getElementById(`amount${pizzaID}`).value=='') document.getElementById(`amount${pizzaID}`).value=1;    
+            order.pizzas.push({ id: pizzaID, amount: document.getElementById(`amount${pizzaID}`).value })
+            e.target.value='REMOVE';
+            
+            console.log(order);
+            checkIfAnyPizzaAdded() ? koszykElement.disabled=false : koszykElement.disabled=true;
+        }else if(e.target.classList.contains('add-button') && e.target.value=='REMOVE'){
+            let pizzaID = e.target.parentElement.id.split(':')[1];
+            e.preventDefault();
+            order.pizzas=order.pizzas.filter(pizza=>pizza.id!=pizzaID)
+            e.target.value='ADD'
+            document.getElementById(`amount${pizzaID}`).value='';
+            console.log(order);
+            checkIfAnyPizzaAdded() ? koszykElement.disabled=false : koszykElement.disabled=true;
+        }
+    })
+
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('add-ingredient')) {
+            // e.target.value == '+' ? e.target.value = '-' : e.target.value = '+';
+            // console.log(e.target.parentElement.innerText);
+            if(e.target.value=='+'){
+                e.target.value='-';
+                customPizzaIngredients.push(e.target.parentElement.innerText);
+            }else{
+                e.target.value='+';
+                customPizzaIngredients=customPizzaIngredients.filter(ingr=>ingr!==e.target.parentElement.innerText);
+            }
+            updateCustomPizzaObj();
+            // console.log(customPizzaIngredients);
         }
     })
 
     koszykElement.addEventListener("click", function (event) {
         event.preventDefault()
-    //     window.location.href = "http://127.0.0.1:3000/order"
-    // })
+        //     window.location.href = "http://127.0.0.1:3000/order"
+        // })
 
-    // if (window.location.href === "http://127.0.0.1:3000/order") {
+        // if (window.location.href === "http://127.0.0.1:3000/order") {
         rootElement.replaceChildren();
         mainElement.replaceChildren()
         mainElement.insertAdjacentHTML("beforeend", `<button id="home">HOME</button>`)
@@ -300,8 +373,8 @@ async function load() {
                 errorContainer.innerHTML = '';
             }
             // -------------- validation Order form error messages display --- START --------------
-            let currentID=await fetchLatestID();  
-            order.id=parseInt(currentID.id)+1;
+            let currentID = await fetchLatestID();
+            order.id = parseInt(currentID.id) + 1;
             order.customer.name = customerName + " " + customerSecondName
             order.customer.email = customerEmail;
             order.customer.address.city = customerCity;
@@ -334,11 +407,25 @@ async function load() {
     })
 }
 
-async function fetchLatestID(){
+async function fetchLatestID() {
     // let currentID = await  fetch("http://127.0.0.1:3000/order/latestID");
     //         currentID = await currentID.json();
     const response = await fetch('http://127.0.0.1:3000/order/latestID');
     const jsonData = await response.json();
     return jsonData;
 }
+
+async function fetchDatas(path) {
+    // let currentID = await  fetch("http://127.0.0.1:3000/order/latestID");
+    //         currentID = await currentID.json();
+    const response = await fetch(path);
+    const jsonData = await response.json();
+    return jsonData;
+}
+
+
+
+
+
+
 window.addEventListener("load", load);

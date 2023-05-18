@@ -6,7 +6,11 @@
     align-items: center;
 }
 
-.logo > img {
+html {
+    scroll-behavior: smooth;
+  }
+
+.logo>img {
     width: 100%;
 }
 
@@ -15,8 +19,8 @@
     width: 20vw;
 }
 
-#koszyk{
-    display:flex;
+#koszyk {
+    display: flex;
     padding: 10px 20px;
     background-color: #a00a0a;
     color: white;
@@ -24,7 +28,7 @@
     border-radius: 5px;
     text-decoration: none;
     transition: background-color 0.3s ease, color 0.3s ease;
-    float:right;
+    float: right;
 }
 
 #allergents {
@@ -45,6 +49,29 @@
     top: 2px;
     background-color: #efebeb;
     flex-wrap: wrap
+}
+
+#left-ingredients{
+    width: 50%;
+    float: left;
+}
+#right-ingredients{
+    width: 50%;
+    float: right;
+}
+
+.add-ingredient{
+    border: 0px;
+    background-color: red;
+    color:white;
+    border-radius: 5px;
+    margin-right: 1vh;
+    text-align: center;
+    
+}
+.add-ingredient:hover{
+    transform: scale(1.1);
+    transition: 0.5s all ease-in-out;
 }
 
 #pizzas {
@@ -94,32 +121,32 @@
     color: rgba(19, 9, 79, 0.81)
 }
 
-.cena-add-button{
-  
-}
+.cena-add-button {}
 
-.add-button{
-    background-color: rgba(205, 5, 5, 0.81);
+.add-button {
+     background-color: rgba(205, 5, 5, 0.81);
     border: medium none;
     border-radius: 0.5rem;
     color: rgb(255, 255, 255);
-    cursor: pointer;
+    cursor: pointer;    
     font-family: Open Sans;
     font-size: 0.8rem;
     height: 1.6rem;
     margin: 0px;
-      margin-top: 0px;
+    margin-top: 0px;
     padding: 0px 1rem;
-      padding-top: 0px;
-    text-align: center;
+    padding-top: 0px;
 }
 
-#formularz{
+
+
+
+#formularz {
     display: flex;
     flex-direction: column;
 }
 
-#home{
+#home {
     background-color: rgba(205, 5, 5, 0.81);
     border: medium none;
     border-radius: 0.5rem;
@@ -129,13 +156,22 @@
     font-size: 0.8rem;
     height: 1.6rem;
     margin: 0px;
-      margin-top: 0px;
+    margin-top: 0px;
     padding: 0px 1rem;
-      padding-top: 0px;
-    text-align: center;   
+    padding-top: 0px;
+    text-align: center;
 }
 
-#save-order{
+.amount-add{
+    width: 7vh;
+    border-radius: 5px;
+}
+
+#koszyk:disabled{
+    background-color: grey;
+}
+
+#save-order {
     background-color: rgba(205, 5, 5, 0.81);
     border: medium none;
     border-radius: 0.5rem;
@@ -145,9 +181,9 @@
     font-size: 0.8rem;
     height: 1.6rem;
     margin: 0px;
-      margin-top: 0px;
+    margin-top: 0px;
     padding: 0px 1rem;
-      padding-top: 0px;
+    padding-top: 0px;
     text-align: center;
 }
 
@@ -156,7 +192,7 @@
 screen and (orientation: portrait) {
 
     .logo {
-   
+
         display: flex;
         width: 50vw;
     }
@@ -168,6 +204,7 @@ screen and (orientation: portrait) {
     }
 
     .pizza {
+       
         border: 1px solid #ccc;
         border-radius: 5px;
         padding: 10px;
@@ -189,5 +226,12 @@ screen and (orientation: portrait) {
         display: -webkit-box;
         -webkit-line-clamp: 3;
         overflow: hidden;
+    }
+
+    #right-ingredients{
+        font-size: 0.7rem;
+    }
+    #left-ingredients{
+        font-size:0.7rem;
     }
 }
