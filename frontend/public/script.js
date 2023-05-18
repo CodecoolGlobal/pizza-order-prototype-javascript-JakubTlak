@@ -41,7 +41,6 @@ function returnTemplate(pizza) {
     `
 }
 
-
 function displayOrder() {
     return `<form>
     <input id="order-name" placeholder="name">
@@ -51,13 +50,12 @@ function displayOrder() {
     <input id="street" placeholder="street">
     <button id="save-order">ORDER</button>
     </form>
+    <div id="error-container" style="color:red;font-weight: bold"></div>
     `
 }
 
-
 async function displayPizzas() {
     const pizzaData = await fetchingData("http://localhost:3000/api/pizza");
-    
     let text = "";
 
     pizzaData.pizzas.forEach(pizza => {
@@ -82,12 +80,8 @@ async function displayPizzas() {
     return text;
 }
 
-
-
-
 async function displayAllergents() {
     const allergenData = await fetchingData("http://localhost:3000/api/allergen");
-
     let text = "";
 
     allergenData.allergens.forEach(allergen => {
@@ -146,10 +140,6 @@ function addCustomPizza() {
 async function load() {
     let amount;
     let orderId = 0;
-
-
-
-
     const mainElement = document.getElementById("main")
     const rootElement = document.getElementById("root")
     const pizzasForm = document.getElementById("pizzas")
@@ -167,7 +157,6 @@ async function load() {
     }).catch(error => {
         console.error(error);
     })
-
 
     const checkboxElements = document.querySelectorAll(".allergen-input")
     const pizzaElements = document.querySelectorAll(".pizza")
@@ -187,13 +176,8 @@ async function load() {
             pizzas.pizzas.forEach(pizza => {
                 document.getElementById('pizzas').insertAdjacentHTML('beforeend', returnTemplate(pizza));
             })
-
         }
     })
-
-
-
-
     const koszykElement = document.getElementById("koszyk");
 
     koszykElement.addEventListener("click", function (event) {
@@ -201,24 +185,17 @@ async function load() {
         window.location.href = "http://127.0.0.1:3000/order"
     })
 
-
-
     if (window.location.href === "http://127.0.0.1:3000/order") {
         rootElement.replaceChildren();
         mainElement.replaceChildren()
-
         mainElement.insertAdjacentHTML("beforeend", `<button id="home">HOME</button>`)
         rootElement.insertAdjacentHTML("beforeend", displayOrder())
-
 
         let customerName;
         let customerSecondName;
         let customerEmail;
         let customerCity;
         let customerStreet;
-
-
-
         const orderForm = document.querySelector("form");
         const inputs = document.querySelectorAll("input");
         const orderButton = document.getElementById("save-order")
@@ -248,23 +225,67 @@ async function load() {
                 }
         })
         orderButton.addEventListener("click", function (event) {
-            event.preventDefault()
+            event.preventDefault();
+
+            // -------------- validation Order form error messages display --- START --------------
+            var errorMessages = [];
+            if (customerName === '' || customerName === undefined) {
+                errorMessages.push('Please enter your name.');
+                document.getElementById('order-name').classList.add('error');
+            } else {
+                document.getElementById('order-name').classList.remove('error');
+            }
+            if (customerSecondName === '' || customerSecondName === undefined) {
+                errorMessages.push('Please enter your second name.');
+                document.getElementById('order-second-name').classList.add('error');
+            } else {
+                document.getElementById('order-second-name').classList.remove('error');
+            }
+            if (customerEmail === '' || customerEmail === undefined) {
+                errorMessages.push('Please enter your email.');
+                document.getElementById('email').classList.add('error');
+            } else {
+                document.getElementById('email').classList.remove('error');
+            }
+            if (customerCity === '' || customerCity === undefined) {
+                errorMessages.push('Please enter your city.');
+                document.getElementById('city').classList.add('error');
+            } else {
+                document.getElementById('city').classList.remove('error');
+            }
+            if (customerStreet === '' || customerStreet === undefined) {
+                errorMessages.push('Please enter your street.');
+                document.getElementById('street').classList.add('error');
+            } else {
+                document.getElementById('street').classList.remove('error');
+            }
+            if (errorMessages.length > 0) {
+                let errorContainer = document.getElementById('error-container');
+                errorContainer.innerHTML = '';
+                errorMessages.forEach(function(errorMessage) {
+                    let errorElement = document.createElement('p');
+                    errorElement.textContent = errorMessage;
+                    errorContainer.appendChild(errorElement);
+                });
+                return;
+            }
+            else{
+                let errorContainer = document.getElementById('error-container');
+                errorContainer.innerHTML = '';
+            }
+// -------------- validation Order form error messages display --- START --------------
+
+            order.id++;
             order.customer.name = customerName + " " +  customerSecondName
             order.customer.email = customerEmail;
             order.customer.city = customerCity;
             order.customer.street = customerStreet;
-
-
-
             let date = new Date()
-
             order.date.year = date.getFullYear()
             order.date.month = date.getMonth() + 1
             order.date.day = date.getDate()
             order.date.hour = date.getHours()
             order.date.minutes = date.getMinutes()
-
-            console.log(order)
 
             fetch("http://127.0.0.1:3000/order", {
                 method: 'POST',
@@ -280,22 +301,10 @@ async function load() {
             })
         })
 
-
         homeButton.addEventListener("click", function(event){
             event.preventDefault()
             window.location.href = "http://127.0.0.1:3000/"
         })
     }
 }
-
-
-
-
-
-
-
-
-
-
-
 window.addEventListener("load", load);
