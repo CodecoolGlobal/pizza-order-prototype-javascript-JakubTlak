@@ -1,4 +1,10 @@
+
 let currentPizzas;
+
+
+
+
+
 
 async function fetchingData(url) {
     const response = await fetch(url);
@@ -7,7 +13,7 @@ async function fetchingData(url) {
     return result;
 }
 
-function returnTemplate(pizza){
+function returnTemplate(pizza) {
     return `<div class="pizza" id="${'pizza:' + pizza.id}">
     <div class="pizza-name" >
     <h2>${pizza.name}</h2>
@@ -20,9 +26,29 @@ function returnTemplate(pizza){
     <div class="price">
     <p>${pizza.price}zł</p>
     </div>
+    <input class="amount" type="number" min="0"> 
+    <button class="save-button" id="${pizza.id}">
+    ADD
+    </button>
     </div>
     `
 }
+
+
+function displayOrder() {
+    return `<form>
+    <input class="order=name" placeholder="name">
+    <input class="order=second-name" placeholder="second name">
+    <input class ="email" placeholder="email">
+    <input class="city" placeholder="city">
+    <input class="street" placeholder="street">
+    <button id="save-order">
+    ORDER
+    </button>
+    </form>
+    `
+}
+
 
 async function displayPizzas() {
     const pizzaData = await fetchingData("http://localhost:3000/api/pizza");
@@ -42,6 +68,10 @@ async function displayPizzas() {
         <div class="price">
         <p>${pizza.price}zł</p>
         </div>
+        <input class="amount" type="number" min="0"> 
+        <button class="save-button" id="${pizza.id}">
+        ADD
+        </button>
         </div>
         `
     });
@@ -64,6 +94,7 @@ async function displayAllergents() {
 }
 
 async function load() {
+    const rootElement = document.getElementById("root")
     const pizzasForm = document.getElementById("pizzas")
     const allergentsForm = document.getElementById('allergents')
 
@@ -84,88 +115,51 @@ async function load() {
     const pizzaElements = document.querySelectorAll(".pizza")
     const allergenElements = document.querySelectorAll(".allergens")
 
-    // window.addEventListener("change", function (event) {
-    //     checkboxElements.forEach(checkbox => {
-    //         pizzaElements.forEach(pizza => {
-    //             allergenElements.forEach(allergen => {
-    //                 if (checkbox.checked === true && allergen.id.includes(checkbox.id.split(":")[1])) {
-    //                     console.log("git");
-    //                     pizza.remove();
-    //                 }
-    //             })
-    //         })
-    //     })
-    // })
     window.addEventListener('change', async (e) => {
         if (e.target.classList.contains('allergen-input')) {
             const checkboxes = Array.from(document.getElementsByClassName('allergen-input'));
             let pizzas = await fetchingData("http://localhost:3000/api/pizza");
-            checkboxes.forEach(box=>{
+            checkboxes.forEach(box => {
                 let id = box.id.split(":")[1];
-                if(box.checked==true){
-                    pizzas.pizzas=pizzas.pizzas.filter(pizza=>!pizza.allergens.includes(parseInt(id)));
+                if (box.checked == true) {
+                    pizzas.pizzas = pizzas.pizzas.filter(pizza => !pizza.allergens.includes(parseInt(id)));
                 }
             })
             document.getElementById('pizzas').replaceChildren();
-            pizzas.pizzas.forEach(pizza=>{
-                document.getElementById('pizzas').insertAdjacentHTML('beforeend',returnTemplate(pizza));
+            pizzas.pizzas.forEach(pizza => {
+                document.getElementById('pizzas').insertAdjacentHTML('beforeend', returnTemplate(pizza));
             })
 
         }
     })
+
+
+    const koszykElement = document.getElementById("koszyk");
+
+    koszykElement.addEventListener("click", function (event) {
+        event.preventDefault()
+        console.log("xd")
+        window.location.href = "http://127.0.0.1:3000/order"
+    })
+
+
+
+    if (window.location.href === "http://127.0.0.1:3000/order") {
+        rootElement.replaceChildren();
+        rootElement.insertAdjacentHTML("beforeend", displayOrder())
+
+
+
+    }
+
+
+
+
+
+
+
+
+
 }
 
 window.addEventListener("load", load);
-
-function getAlOrders() {
-
-// GET request to retrieve the list of orders
-    fetch('http://localhost:3000/api/order')
-        .then(response => response.json())
-        .then(orders => {
-            console.log("CLIENT - GET ORDERS: ", orders);
-        })
-        .catch(error => console.error(error));
-}
-
-getAlOrders();
-
-function sendNewOrder(){
-    const newOrder = {
-        id: 2,
-        pizzas: [
-            {id: 1, amount: 2}
-        ],
-        date: {
-            year: 2022,
-            month: 6,
-            day: 7,
-            hour: 18,
-            minute: 47
-        },
-        customer: {
-            name: "John Doe",
-            email: "jd@example.com",
-            address: {
-                city: "Palermo",
-                street: "Via Appia 6"
-            }
-        }
-    };
-
-    fetch('http://localhost:3000/api/order', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newOrder)
-    })
-        .then(response => response.json())
-        .then(updatedOrders => {
-            // Use the updated list of orders in your frontend
-            console.log("CLIENT - ORDERS UPDATED after inputing new order: ",updatedOrders);
-        })
-        .catch(error => console.error(error));
-}
-
-sendNewOrder();

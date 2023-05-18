@@ -51,11 +51,13 @@ nav ul li a:hover {
     left: 0;
     top: 2px;
     background-color: #efebeb;
+    flex-wrap: wrap
 }
 
 #pizzas {
     -moz-box-align: stretch;
     align-items: stretch;
+    justify-content: center;
     display: flex;
     flex-wrap: wrap;
     list-style: none;
@@ -69,11 +71,11 @@ nav ul li a:hover {
     padding: 10px;
     margin-bottom: 20px;
     margin-right: 2rem;
-    width: calc(20.3333% - 1.33333rem);
+    width: 20rem;
 }
 
-.pizza-name{
-    color:rgba(205, 5, 5, 0.81)
+.pizza-name {
+    color: rgba(205, 5, 5, 0.81)
 }
 
 .pizza img {
@@ -94,11 +96,29 @@ nav ul li a:hover {
     overflow: hidden;
 }
 
-.price p {
+.price {
+    justify-content: flex-end;
+    display: flex;
     margin: 0;
     font-weight: bold;
-    color:rgba(29, 97, 69, 0.81)
-  }
+    color: rgba(29, 97, 69, 0.81)
+}
+
+.save-button{
+    background-color: rgb(2, 115, 52);
+    border: medium none;
+    border-radius: 0.5rem;
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    font-family: Open Sans;
+    font-size: 0.8rem;
+    height: 1.6rem;
+    margin: 0px;
+      margin-top: 0px;
+    padding: 0px 1rem;
+      padding-top: 0px;
+    text-align: center;
+}
 
 /* Wersja CSS na mobile */
 @media (max-height: 450px),
@@ -108,15 +128,18 @@ screen and (orientation: portrait) {
         font-size: 62.5%;
         gap: 2px
     }
+
     .pizza {
         border: 1px solid #ccc;
         border-radius: 5px;
         padding: 10px;
         margin-bottom: 20px;
         margin-right: 2rem;
-        width: calc(33.3333% - 1.33333rem);
+        width: 10rem;
+        justify-content: center;
     }
-    .pizza-name{
+
+    .pizza-name {
         margin-top: 0px;
         font-size: 0.8rem;
     }
