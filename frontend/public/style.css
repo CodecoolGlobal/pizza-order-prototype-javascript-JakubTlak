@@ -94,6 +94,23 @@ nav ul li a:hover {
     overflow: hidden;
 }
 
+.add-ingredient{
+    border: 0px;
+    background-color: white;    
+}
+#left-ingredients{
+    width: 50%;
+    float: left;
+}
+#right-ingredients{
+    width: 50%;
+    float: right;
+}
+
+.pizza{
+    width: 30vh;
+}
+
 .price p {
     margin: 0;
     font-weight: bold;
