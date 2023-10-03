@@ -22,21 +22,21 @@ app.get("/order", (req,res)=>{
 
 app.post("/order", (req,res)=>{
 	let order = req.body;
-	const orderArr=JSON.parse(fs.readFileSync(`${__dirname}/../backend/order.json`));
+	const orderArr=JSON.parse(fs.readFileSync(`order.json`));
 	console.log(orderArr);
 	orderArr.push(order);
-	fs.writeFile(`${__dirname}/../backend/order.json`, JSON.stringify(orderArr),(error)=>{
+	fs.writeFile(`order.json`, JSON.stringify(orderArr),(error)=>{
 		if(error){
 			console.error(error)
-			res.status(500).send("i cuj")
+			res.status(500).send("Server Error")
 		}else{
-			res.status(200).send("git")
+			res.status(200).send("Server Working")
 		}
 	})
 })
 
 app.get("/order/latestID",(req,res)=>{
-	let orderArr=JSON.parse(fs.readFileSync(`${__dirname}/../backend/order.json`));
+	let orderArr=JSON.parse(fs.readFileSync(`order.json`));
 	let latestID = orderArr[orderArr.length-1].id;
 	let IDobj = {id:latestID};
 	res.send(JSON.stringify(IDobj));
